@@ -13,16 +13,38 @@
                 },
                 {
                     "name": "AMAZON.StopIntent",
-                    "samples": []
+                    "samples": [
+                        "calla",
+                        "para",
+                        "cancela",
+                        "adios"
+                    ]
                 },
                 {
-                    "name": "NuevaInformacion",
+                    "name": "CrossfitHandler",
                     "slots": [],
                     "samples": [
                         "cual es el wod",
                         "con que sufrimos hoy",
                         "dime entreno del dia",
-                        "cuentame algo"
+                        "crossfit"
+                    ]
+                },
+                {
+                    "name": "PerformanceInfo",
+                    "slots": [],
+                    "samples": [
+                        "cual es el entreno de performance",
+                        "performance"
+                    ]
+                },
+                {
+                    "name": "FootbalInfo",
+                    "slots": [],
+                    "samples": [
+                        "football",
+                        "cual es el entreno de footbal",
+                        "cual es el entreno de los fuertes"
                     ]
                 }
             ],

@@ -12,11 +12,14 @@ const SKILL_NAME = 'Crossfit Singular Box - El WOD de hoy';
 const HELP_MESSAGE = 'Puedes decir, dime entreno del dia';
 const HELP_REPROMPT = '¿Cómo te puedo ayudar?';
 const STOP_MESSAGE = 'Adios gerrero';
-const ERROR_MESSAGE = 'Disculpas ha ocurrido un error. Espartanos! au au au'
+const ERROR_MESSAGE = 'Disculpas ha ocurrido un error. Espartanos! <break time=\"1s\"/> au <break time=\"1s\"/> au <break time=\"1s\"/> au'
 const CF = "Crossfit"
 const CFF = "CFF"
 const PERFORMANCE = "Performance"
+const rePromptText1 = "¿Quieres saber otro entreno? Di Crossfit, Football o Performance"
+const rePromptText2 = "¿Otro entreno?"
 
+var nreprompts = 0
 var speechOutput = ''
 var string2read = new Array()
 
@@ -40,9 +43,9 @@ const CrossfitHandler = {
     
     let parser = new Parser();
     let feed = await parser.parseURL(RSSFeed);
-    string2read = readFeed(feed,CF)
+    string2read = myreadFeed(feed,CF)
     return handlerInput.responseBuilder
-    .speak(buildresponse(string2read[0],string2read[1]))
+    .speak(mybuildresponse(string2read[0],string2read[1]))
     .withStandardCard(string2read[0], string2read[1], imageUrl, imageUrl)
     .reprompt('¿Quieres saber otro entreno? Di Crossfit, Football o Performance')
     .getResponse(); 
@@ -64,9 +67,9 @@ const FootballHandler = {
     let Parser = require('rss-parser');
     let parser = new Parser();
     let feed = await parser.parseURL(RSSFeed);
-    string2read = readFeed(feed,CFF)
+    string2read = myreadFeed(feed,CFF)
     return handlerInput.responseBuilder
-    .speak(string2read[0] + ' ' + string2read[1])
+    .speak(mybuildresponse(string2read[0],string2read[1]))
     .withStandardCard(string2read[0], string2read[1], imageUrl, imageUrl)
     .reprompt('¿Quieres saber otro entreno? Di Crossfit, Football o Performance')
     .getResponse(); 
@@ -87,17 +90,25 @@ const PerformanceHandler = {
     let Parser = require('rss-parser');
     let parser = new Parser();
     let feed = await parser.parseURL(RSSFeed);
-    string2read = readFeed(feed,PERFORMANCE)
+    string2read = myreadFeed(feed,PERFORMANCE);
     return handlerInput.responseBuilder
-    .speak(string2read[0] + ' ' + string2read[1])
-    .withStandardCard(string2read[0], string2read[1], imageUrl, imageUrl)
-    .reprompt('¿Quieres saber otro entreno? Di Crossfit, Football o Performance')
-    .getResponse(); 
+      .speak(mybuildresponse(string2read[0],string2read[1]))
+      .withStandardCard(string2read[0], string2read[1], imageUrl, imageUrl)
+      .reprompt('¿Quieres saber otro entreno? Di Crossfit, Football o Performance')
+      .getResponse(); 
   },
 };
 
-function buildresponse (_wodTitle, _wod) {
-  return  _wodTitle + "<break time=\"1s\"/>"+ _wod
+function mybuildresponse (_wodTitle, _wod) {
+  var temp = ''
+  if (nreprompts = 0) {
+      temp = _wodTitle + "<break time=\"1s\"/>"+ _wod + "<break time=\"1s\"/>" + rePromptText1
+      nreprompts = nreprompts + 1
+  } else {
+      temp = _wodTitle + "<break time=\"1s\"/>"+ _wod + "<break time=\"1s\"/>" + rePromptText2
+      nreprompts = nreprompts + 1
+  }
+  return  temp
 }
 
 function selectRandomeImage(){
@@ -107,7 +118,7 @@ function selectRandomeImage(){
 }
 
 // My functions
-function readFeed(_feed,_sport) {
+function myreadFeed(_feed,_sport) {
   var sport 
   var tempwod = new Array()
   var temptitle = new Array()
@@ -133,7 +144,6 @@ function readFeed(_feed,_sport) {
     if (cleanString(item.title).search(sport)!= -1) {
       tempwod[i] = cleanString(item.content)
       temptitle[i]  = cleanString(item.title)
-      console.log(cleanString(item.content))
       i=i+1
     }
     
@@ -143,7 +153,6 @@ function readFeed(_feed,_sport) {
 
     response[0] = temptitle[0]
     response[1] = tempwod[0]        
-
   return response
 }
 
