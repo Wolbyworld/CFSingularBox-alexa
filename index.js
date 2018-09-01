@@ -229,6 +229,12 @@ const motivationalImages = [
 ,'https://visualhunt.com/photos/2/crossfit_0132.jpg?s=l'
 ,'https://images.pexels.com/photos/931324/pexels-photo-931324.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260'
 ,'https://images.pexels.com/photos/116077/pexels-photo-116077.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260'
+,'https://cdn.pixabay.com/photo/2015/02/13/22/10/runners-635906_960_720.jpg'
+,'https://cdn.pixabay.com/photo/2014/10/22/17/25/stretching-498256_960_720.jpg'
+,'https://media.defense.gov/2014/May/16/2000849981/-1/-1/0/140515-F-OC707-601.JPG'
+,'https://upload.wikimedia.org/wikipedia/commons/d/da/Nano_Action.JPG'
+,'https://media.defense.gov/2013/Jun/13/2000025304/-1/-1/0/120531-M-XY007-001.JPG'
+,'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT4TIv6oflVD5Ti6h2pzQLPLEVV3RlJ6SdtKwR5H96U_9C8MIar'
 ]
 
 const skillBuilder = Alexa.SkillBuilders.custom();
