@@ -5,7 +5,10 @@
             "intents": [
                 {
                     "name": "AMAZON.CancelIntent",
-                    "samples": []
+                    "samples": [
+                        "cancela",
+                        "cierra"
+                    ]
                 },
                 {
                     "name": "AMAZON.HelpIntent",
@@ -16,8 +19,8 @@
                     "samples": [
                         "calla",
                         "para",
-                        "cancela",
-                        "adios"
+                        "adios",
+                        "no"
                     ]
                 },
                 {
