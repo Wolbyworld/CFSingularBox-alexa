@@ -3,7 +3,7 @@
 
 const Alexa = require('ask-sdk');
 const RSSFeed = "http://fetchrss.com/rss/5b816db48a93f882278b4567560933858.xml";
-
+var imageUrl = 'https://image.boxrox.com/2015/12/fi1.png'
 //Variable definition
 const SKILL_NAME = 'Crossfit Singular Box - El WOD de hoy';
 const HELP_MESSAGE = 'Puedes decir, dime entreno del dia';
@@ -11,7 +11,7 @@ const HELP_REPROMPT = '¿Cómo te puedo ayudar?';
 const STOP_MESSAGE = 'Adios gerrero';
 
 var speechOutput = ''
-var string2read = ''
+var string2read = new Array()
 
 
 const NuevaInformacionHandler = {
@@ -28,24 +28,31 @@ const NuevaInformacionHandler = {
   //If this handler handle it, then what to do
   async handle(handlerInput) {
   
+    imageUrl = selectRandomeImage();
     let Parser = require('rss-parser');
     let parser = new Parser();
     let feed = await parser.parseURL(RSSFeed);
     string2read = readFeed(feed)
     return handlerInput.responseBuilder
-    .speak(string2read)
-    //.speak(myFunction(2,3))
-    .withSimpleCard(SKILL_NAME + "\n" + string2read)
-    .getResponse();
+    .speak(string2read[0] + ' ' + string2read[1])
+    .withStandardCard(string2read[0], string2read[1], imageUrl, imageUrl)
+    .getResponse(); 
   },
 };
 
 
 
+function selectRandomeImage(){
+    const ImgArr = motivationalImages;
+    const RandImageIndex = Math.floor(Math.random() * ImgArr.length);
+    return ImgArr[RandImageIndex];
+}
+
 // My functions
 function readFeed(_feed) {
   var tempwod = new Array()
   var temptitle = new Array()
+  var response = new Array()
   var tempdate
   var i = 0
 
@@ -55,8 +62,10 @@ function readFeed(_feed) {
       temptitle[i]  = cleanString(item.title)
     }
     i=i+1
-  })              
-  return temptitle[0] + " " + tempwod[0]
+  })     
+  response[0] = temptitle[0]
+  response[1] = tempwod[0]        
+  return response
 }
 
 
@@ -127,6 +136,12 @@ const ErrorHandler = {
   },
 };
 
+const motivationalImages = [
+'https://visualhunt.com/photos/5/crossfit-sports-fitness-training-exercise-athlete.jpg?s=l'
+,'https://visualhunt.com/photos/2/crossfit_0132.jpg?s=l'
+,'https://images.pexels.com/photos/931324/pexels-photo-931324.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260'
+,'https://images.pexels.com/photos/116077/pexels-photo-116077.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260'
+]
 
 const skillBuilder = Alexa.SkillBuilders.custom();
 
