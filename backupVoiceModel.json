@@ -1,0 +1,32 @@
+{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "entreno del dia",
+            "intents": [
+                {
+                    "name": "AMAZON.CancelIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.HelpIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.StopIntent",
+                    "samples": []
+                },
+                {
+                    "name": "NuevaInformacion",
+                    "slots": [],
+                    "samples": [
+                        "cual es el wod",
+                        "con que sufrimos hoy",
+                        "dime entreno del dia",
+                        "cuentame algo"
+                    ]
+                }
+            ],
+            "types": []
+        }
+    }
+}

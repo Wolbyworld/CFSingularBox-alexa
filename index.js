@@ -1,30 +1,62 @@
 /* eslint-disable  func-names */
 /* eslint-disable  no-console */
 
+//dependences
 const Alexa = require('ask-sdk');
+let Parser = require('rss-parser');
+
+//Variable definition
 const RSSFeed = "http://fetchrss.com/rss/5b816db48a93f882278b4567560933858.xml";
 var imageUrl = 'https://image.boxrox.com/2015/12/fi1.png'
-//Variable definition
 const SKILL_NAME = 'Crossfit Singular Box - El WOD de hoy';
 const HELP_MESSAGE = 'Puedes decir, dime entreno del dia';
 const HELP_REPROMPT = '¿Cómo te puedo ayudar?';
 const STOP_MESSAGE = 'Adios gerrero';
+const ERROR_MESSAGE = 'Disculpas ha ocurrido un error. Espartanos! au au au'
+const CF = "Crossfit"
+const CFF = "CFF"
+const PERFORMANCE = "Performance"
 
 var speechOutput = ''
 var string2read = new Array()
 
 
-const NuevaInformacionHandler = {
+const CrossfitHandler = {
   //Define when this handler should take the request
+  //Crossfit requests and 
   canHandle(handlerInput) {
     const request = handlerInput.requestEnvelope.request;
     const locale = request.locale
     return ( request.type === 'LaunchRequest'
       && request.locale === 'es-ES')
       || (request.type === 'IntentRequest'
-        && request.intent.name === 'NuevaInformacion');
+        && request.intent.name === 'CrossfitHandler');
   },
 
+  //If this handler handle it, then what to do
+  async handle(handlerInput) {
+  
+    imageUrl = selectRandomeImage();
+    
+    let parser = new Parser();
+    let feed = await parser.parseURL(RSSFeed);
+    string2read = readFeed(feed,CF)
+    return handlerInput.responseBuilder
+    .speak(buildresponse(string2read[0],string2read[1]))
+    .withStandardCard(string2read[0], string2read[1], imageUrl, imageUrl)
+    .reprompt('¿Quieres saber otro entreno? Di Crossfit, Football o Performance')
+    .getResponse(); 
+  },
+};
+
+const FootballHandler = {
+  //Define when this handler should take the request
+  canHandle(handlerInput) {
+    const request = handlerInput.requestEnvelope.request;
+    const locale = request.locale
+    return (request.type === 'IntentRequest'
+        && request.intent.name === 'FootbalInfo');
+  },
   //If this handler handle it, then what to do
   async handle(handlerInput) {
   
@@ -32,15 +64,41 @@ const NuevaInformacionHandler = {
     let Parser = require('rss-parser');
     let parser = new Parser();
     let feed = await parser.parseURL(RSSFeed);
-    string2read = readFeed(feed)
+    string2read = readFeed(feed,CFF)
     return handlerInput.responseBuilder
     .speak(string2read[0] + ' ' + string2read[1])
     .withStandardCard(string2read[0], string2read[1], imageUrl, imageUrl)
+    .reprompt('¿Quieres saber otro entreno? Di Crossfit, Football o Performance')
     .getResponse(); 
   },
 };
 
+const PerformanceHandler = {
+  //Define when this handler should take the request
+  canHandle(handlerInput) {
+    const request = handlerInput.requestEnvelope.request;
+    const locale = request.locale
+    return (request.type === 'IntentRequest'
+        && request.intent.name === 'PerformanceInfo');
+  },
+  //If this handler handle it, then what to do
+  async handle(handlerInput) {
+    imageUrl = selectRandomeImage();
+    let Parser = require('rss-parser');
+    let parser = new Parser();
+    let feed = await parser.parseURL(RSSFeed);
+    string2read = readFeed(feed,PERFORMANCE)
+    return handlerInput.responseBuilder
+    .speak(string2read[0] + ' ' + string2read[1])
+    .withStandardCard(string2read[0], string2read[1], imageUrl, imageUrl)
+    .reprompt('¿Quieres saber otro entreno? Di Crossfit, Football o Performance')
+    .getResponse(); 
+  },
+};
 
+function buildresponse (_wodTitle, _wod) {
+  return  _wodTitle + "<break time=\"1s\"/>"+ _wod
+}
 
 function selectRandomeImage(){
     const ImgArr = motivationalImages;
@@ -49,22 +107,43 @@ function selectRandomeImage(){
 }
 
 // My functions
-function readFeed(_feed) {
+function readFeed(_feed,_sport) {
+  var sport 
   var tempwod = new Array()
   var temptitle = new Array()
   var response = new Array()
   var tempdate
   var i = 0
 
+  //Select the sport to look for
+  switch (_sport){
+    case CF:
+      sport = "WOD"
+      break;
+    case CFF:
+      sport = "CFF"
+      break;
+    case PERFORMANCE:
+      sport = "Performance"
+      break;
+  }
+
+  //Parse results
   _feed.items.forEach (item => {
-    if (cleanString(item.title).search("WOD")!= -1) {
+    if (cleanString(item.title).search(sport)!= -1) {
       tempwod[i] = cleanString(item.content)
       temptitle[i]  = cleanString(item.title)
+      console.log(cleanString(item.content))
+      i=i+1
     }
-    i=i+1
-  })     
-  response[0] = temptitle[0]
-  response[1] = tempwod[0]        
+    
+  })
+
+  //Prepare response
+
+    response[0] = temptitle[0]
+    response[1] = tempwod[0]        
+
   return response
 }
 
@@ -130,8 +209,8 @@ const ErrorHandler = {
     console.log(`Error handled: ${error.message}`);
 
     return handlerInput.responseBuilder
-      .speak('Sorry, an error occurred.')
-      .reprompt('Sorry, an error occurred.')
+      .speak(ERROR_MESSAGE)
+      .reprompt(ERROR_MESSAGE)
       .getResponse();
   },
 };
@@ -147,7 +226,9 @@ const skillBuilder = Alexa.SkillBuilders.custom();
 
 exports.handler = skillBuilder
   .addRequestHandlers(
-    NuevaInformacionHandler,
+    CrossfitHandler,
+    PerformanceHandler,
+    FootballHandler,
     HelpHandler,
     ExitHandler,
     SessionEndedRequestHandler
