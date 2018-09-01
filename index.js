@@ -3,12 +3,12 @@
 
 const Alexa = require('ask-sdk');
 const RSSFeed = "http://fetchrss.com/rss/5b816db48a93f882278b4567560933858.xml";
-  var speechOutput = ''
-  var string2read = ''
-/* This is what I am adding */
+var speechOutput = ''
+ var string2read = ''
 
 
 const NuevaInformacionHandler = {
+  //Define when this handler should take the request
   canHandle(handlerInput) {
     const request = handlerInput.requestEnvelope.request;
     const locale = request.locale
@@ -17,41 +17,56 @@ const NuevaInformacionHandler = {
       || (request.type === 'IntentRequest'
         && request.intent.name === 'NuevaInformacion');
   },
-  handle(handlerInput) {
-    const factArr = ESdata;
-    const factIndex = Math.floor(Math.random() * factArr.length);
-    const randomFact = factArr[factIndex];
-  
 
-let Parser = require('rss-parser');
-let parser = new Parser();
- 
-(async () => {
- 
-  let feed = await parser.parseURL(RSSFeed);
-  console.log(feed.description);
-   var i = 0
-  feed.items.forEach(item => {
-    temp = item.content
-    temp= temp.replace('<p>','')
-    temp= temp.replace('<br />','')
-    temp= temp.replace('<span style="font-size:12px; color: gray;">(RSS generated with <a href="http://fetchrss.com" target="_blank">FetchRss</a>)</span>','')
-    temp= temp.replace('</p>','')
-    temp= temp.replace('<br />','')
-    string2read = temp 
-  });
- 
-})();
-    console.log('este es el output' + string2read)
+  //If this handler handle it, then what to do
+  async handle(handlerInput) {
+  
+    let Parser = require('rss-parser');
+    let parser = new Parser();
+    let feed = await parser.parseURL(RSSFeed);
+    string2read = readFeed(feed)
     return handlerInput.responseBuilder
-      .speak(string2read + 'Alvaro es el puto Amo y va a petar a todos en el entreno')
-      .withSimpleCard(SKILL_NAME, randomFact)
-      .getResponse();
+    .speak(string2read)
+    //.speak(myFunction(2,3))
+    .withSimpleCard(SKILL_NAME + "\n" + string2read)
+    .getResponse();
   },
 };
 
-// ------- From the old
 
+
+// My functions
+function readFeed(_feed) {
+  var tempwod = new Array()
+  var temptitle = new Array()
+  var tempdate
+  var i = 0
+
+  _feed.items.forEach (item => {
+    if (cleanString(item.title).search("WOD")!= -1) {
+      tempwod[i] = cleanString(item.content)
+      temptitle[i]  = cleanString(item.title)
+    }
+    i=i+1
+  })              
+  return temptitle[0] + " " + tempwod[0]
+}
+
+
+
+function cleanString(_text) {
+  var temp
+  temp = _text;
+  temp= temp.replace('<p>','');
+  temp= temp.replace('<br />','');
+  temp= temp.replace('<span style="font-size:12px; color: gray;">(RSS generated with <a href="http://fetchrss.com" target="_blank">FetchRss</a>)</span>','')
+  temp= temp.replace('</p>','');
+  temp= temp.replace(/\n/g, '')
+  temp= temp.replace('<br />','');
+  return  temp;
+}
+
+// ------- From the old
 const GetNewFactHandler = {
   canHandle(handlerInput) {
     const request = handlerInput.requestEnvelope.request;
@@ -64,11 +79,6 @@ const GetNewFactHandler = {
     const factIndex = Math.floor(Math.random() * factArr.length);
     const randomFact = factArr[factIndex];
     const speechOutput = GET_FACT_MESSAGE + randomFact;
-
-
-
-
-
     return handlerInput.responseBuilder
       .speak(speechOutput)
       .withSimpleCard(SKILL_NAME, randomFact)
