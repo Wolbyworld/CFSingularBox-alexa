@@ -23,6 +23,13 @@ var nreprompts = 0
 var speechOutput = ''
 var string2read = new Array()
 
+var dic = []; // create an empty array
+
+/**
+
+MY HANDLERS
+
+**/
 
 const CrossfitHandler = {
   //Define when this handler should take the request
@@ -45,7 +52,7 @@ const CrossfitHandler = {
     let feed = await parser.parseURL(RSSFeed);
     string2read = myreadFeed(feed,CF)
     return handlerInput.responseBuilder
-    .speak(mybuildresponse(string2read[0],string2read[1]))
+    .speak(spokenResponseBuilder(string2read[0],string2read[1]))
     .withStandardCard(string2read[0], string2read[1], imageUrl, imageUrl)
     .reprompt('¿Quieres saber otro entreno? Di Crossfit, Football o Performance')
     .getResponse(); 
@@ -69,7 +76,7 @@ const FootballHandler = {
     let feed = await parser.parseURL(RSSFeed);
     string2read = myreadFeed(feed,CFF)
     return handlerInput.responseBuilder
-    .speak(mybuildresponse(string2read[0],string2read[1]))
+    .speak(spokenResponseBuilder(string2read[0],string2read[1]))
     .withStandardCard(string2read[0], string2read[1], imageUrl, imageUrl)
     .reprompt('¿Quieres saber otro entreno? Di Crossfit, Football o Performance')
     .getResponse(); 
@@ -99,25 +106,54 @@ const PerformanceHandler = {
   },
 };
 
-function mybuildresponse (_wodTitle, _wod) {
+/**
+
+MY FUNCTIONS
+
+**/
+
+/**
+This function receives the information for the wod and turns it into the 
+an spoken version. It gives entonation, and replaces english terms
+**/
+function spokenResponseBuilder (_wodTitle, _wod) {
   var temp = ''
+  var wodClean = replaceEnglishTerms(_wod.toLowerCase()); 
   if (nreprompts = 0) {
-      temp = _wodTitle + "<break time=\"1s\"/>"+ _wod + "<break time=\"1s\"/>" + rePromptText1
+      temp = _wodTitle + "<break time=\"1s\"/>"+ wodClean + "<break time=\"1s\"/>" + rePromptText1
       nreprompts = nreprompts + 1
   } else {
-      temp = _wodTitle + "<break time=\"1s\"/>"+ _wod + "<break time=\"1s\"/>" + rePromptText2
+      temp = _wodTitle + "<break time=\"1s\"/>"+ wodClean + "<break time=\"1s\"/>" + rePromptText2
       nreprompts = nreprompts + 1
   }
   return  temp
 }
 
+/**
+Goes thru the wod changing those terms that are not easy to understand when pronounced in 
+english in Alexa: i.e: EMOM
+**/
+function replaceEnglishTerms(_wod){
+  var temp = _wod
+  for (var key in dic){
+    temp = temp.replace(key,dic[key])
+  }
+  return temp
+}
+
+/**
+Selects a random image to return with the cards
+**/
 function selectRandomeImage(){
     const ImgArr = motivationalImages;
     const RandImageIndex = Math.floor(Math.random() * ImgArr.length);
     return ImgArr[RandImageIndex];
 }
 
-// My functions
+/**
+Given the XML of the feed and the sport you want to know, it returns
+the string with the wod and the title of the wod
+**/
 function myreadFeed(_feed,_sport) {
   var sport 
   var tempwod = new Array()
@@ -157,7 +193,10 @@ function myreadFeed(_feed,_sport) {
 }
 
 
-
+/**
+Cleans the string from weird characters associated with the XML. 
+Add more lines if things continue appearing
+**/
 function cleanString(_text) {
   var temp
   temp = _text;
@@ -170,6 +209,31 @@ function cleanString(_text) {
   return  temp;
 }
 
+/**
+Big variables init
+**/
+//** Foto library
+const motivationalImages = [
+'https://visualhunt.com/photos/5/crossfit-sports-fitness-training-exercise-athlete.jpg?s=l'
+,'https://visualhunt.com/photos/2/crossfit_0132.jpg?s=l'
+,'https://images.pexels.com/photos/931324/pexels-photo-931324.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260'
+,'https://images.pexels.com/photos/116077/pexels-photo-116077.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260'
+,'https://cdn.pixabay.com/photo/2015/02/13/22/10/runners-635906_960_720.jpg'
+,'https://cdn.pixabay.com/photo/2014/10/22/17/25/stretching-498256_960_720.jpg'
+,'https://media.defense.gov/2014/May/16/2000849981/-1/-1/0/140515-F-OC707-601.JPG'
+,'https://upload.wikimedia.org/wikipedia/commons/d/da/Nano_Action.JPG'
+,'https://media.defense.gov/2013/Jun/13/2000025304/-1/-1/0/120531-M-XY007-001.JPG'
+,'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT4TIv6oflVD5Ti6h2pzQLPLEVV3RlJ6SdtKwR5H96U_9C8MIar'
+]
+
+
+//** Dictionary of english terms to españoliar
+dic['EMOM']="every minute on the minute"
+
+
+/**
+Built in Handlers and variables. NOT TO TOUCH Excepto to add new handlers
+**/
 const HelpHandler = {
   canHandle(handlerInput) {
     const request = handlerInput.requestEnvelope.request;
@@ -223,19 +287,6 @@ const ErrorHandler = {
       .getResponse();
   },
 };
-
-const motivationalImages = [
-'https://visualhunt.com/photos/5/crossfit-sports-fitness-training-exercise-athlete.jpg?s=l'
-,'https://visualhunt.com/photos/2/crossfit_0132.jpg?s=l'
-,'https://images.pexels.com/photos/931324/pexels-photo-931324.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260'
-,'https://images.pexels.com/photos/116077/pexels-photo-116077.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260'
-,'https://cdn.pixabay.com/photo/2015/02/13/22/10/runners-635906_960_720.jpg'
-,'https://cdn.pixabay.com/photo/2014/10/22/17/25/stretching-498256_960_720.jpg'
-,'https://media.defense.gov/2014/May/16/2000849981/-1/-1/0/140515-F-OC707-601.JPG'
-,'https://upload.wikimedia.org/wikipedia/commons/d/da/Nano_Action.JPG'
-,'https://media.defense.gov/2013/Jun/13/2000025304/-1/-1/0/120531-M-XY007-001.JPG'
-,'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT4TIv6oflVD5Ti6h2pzQLPLEVV3RlJ6SdtKwR5H96U_9C8MIar'
-]
 
 const skillBuilder = Alexa.SkillBuilders.custom();
 
