@@ -6,8 +6,8 @@ const Alexa = require('ask-sdk');
 let Parser = require('rss-parser');
 
 //Variable definition
-//const RSSFeed = "https://politepol.com/feed/24728";
-const RSSFeed = "http://fetchrss.com/rss/5b816db48a93f882278b4567560933858.xml"
+const RSSFeed = "https://politepol.com/feed/24728";
+//const RSSFeed = "http://fetchrss.com/rss/5b816db48a93f882278b4567560933858.xml"
 var imageUrl = 'https://image.boxrox.com/2015/12/fi1.png'
 const SKILL_NAME = 'Crossfit Singular Box - El WOD de hoy';
 const HELP_MESSAGE = 'Puedes decir, dime entreno del dia';
@@ -210,6 +210,7 @@ function cleanString(_text) {
   temp= temp.replace('</p>','');
   temp= temp.replace(/\n/g, '')
   temp= temp.replace('<br />','');
+  temp= temp.replace(/&/g, "and"); 
   return  temp;
 }
 
