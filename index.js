@@ -6,12 +6,13 @@ const Alexa = require('ask-sdk');
 let Parser = require('rss-parser');
 
 //Variable definition
-const RSSFeed = "http://fetchrss.com/rss/5b816db48a93f882278b4567560933858.xml";
+//const RSSFeed = "https://politepol.com/feed/24728";
+const RSSFeed = "http://fetchrss.com/rss/5b816db48a93f882278b4567560933858.xml"
 var imageUrl = 'https://image.boxrox.com/2015/12/fi1.png'
 const SKILL_NAME = 'Crossfit Singular Box - El WOD de hoy';
 const HELP_MESSAGE = 'Puedes decir, dime entreno del dia';
 const HELP_REPROMPT = '¿Cómo te puedo ayudar?';
-const STOP_MESSAGE = 'Adios gerrero';
+const STOP_MESSAGE = 'Adios crossfitero';
 const ERROR_MESSAGE = 'Disculpas ha ocurrido un error. Espartanos! <break time=\"1s\"/> au <break time=\"1s\"/> au <break time=\"1s\"/> au'
 const CF = "Crossfit"
 const CFF = "CFF"
@@ -99,7 +100,7 @@ const PerformanceHandler = {
     let feed = await parser.parseURL(RSSFeed);
     string2read = myreadFeed(feed,PERFORMANCE);
     return handlerInput.responseBuilder
-      .speak(mybuildresponse(string2read[0],string2read[1]))
+      .speak(spokenResponseBuilder(string2read[0],string2read[1]))
       .withStandardCard(string2read[0], string2read[1], imageUrl, imageUrl)
       .reprompt('¿Quieres saber otro entreno? Di Crossfit, Football o Performance')
       .getResponse(); 
@@ -119,11 +120,14 @@ an spoken version. It gives entonation, and replaces english terms
 function spokenResponseBuilder (_wodTitle, _wod) {
   var temp = ''
   var wodClean = replaceEnglishTerms(_wod.toLowerCase()); 
+  var titleClean = replaceEnglishTerms(_wodTitle.toLowerCase())
+  wocClean = wodClean.replace('b:','<break time=\"1s\"/> B:')
+  console.log(wodClean.search("b:"))
   if (nreprompts = 0) {
-      temp = _wodTitle + "<break time=\"1s\"/>"+ wodClean + "<break time=\"1s\"/>" + rePromptText1
+      temp = titleClean + "<break time=\"1s\"/>"+ wodClean + "<break time=\"1s\"/>" + rePromptText1
       nreprompts = nreprompts + 1
   } else {
-      temp = _wodTitle + "<break time=\"1s\"/>"+ wodClean + "<break time=\"1s\"/>" + rePromptText2
+      temp = titleClean + "<break time=\"1s\"/>"+ wodClean + "<break time=\"1s\"/>" + rePromptText2
       nreprompts = nreprompts + 1
   }
   return  temp
@@ -229,7 +233,8 @@ const motivationalImages = [
 
 //** Dictionary of english terms to españoliar
 dic['EMOM']="every minute on the minute"
-
+dic['cff']="Crossfit Football"
+dic['pullups'] ="pull ups"
 
 /**
 Built in Handlers and variables. NOT TO TOUCH Excepto to add new handlers
