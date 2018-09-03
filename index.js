@@ -140,7 +140,11 @@ english in Alexa: i.e: EMOM
 function replaceEnglishTerms(_wod){
   var temp = _wod
   for (var key in dic){
-    temp = temp.replace(key,dic[key])
+    var i;
+    for (i = 0; i < 5; i++) { 
+        temp = temp.replace(key,dic[key])
+    }
+    
   }
   return temp
 }
@@ -233,9 +237,32 @@ const motivationalImages = [
 
 
 //** Dictionary of english terms to españoliar
-dic['EMOM']="every minute on the minute"
+dic['emom']="every minit on de minit"
 dic['cff']="Crossfit Football"
-dic['pullups'] ="pull ups"
+dic['pullups'] ="pulaps"
+dic['gymanstic']="gimnástico"
+dic['gymnastic']="gimnástico"
+dic['muscleups']='máselaps'
+dic['toes']='tous'
+dic['burpees']='burpis'
+dic['jerk']='yerk'
+dic['lunges']='lanches'
+dic[' db ' ]=' dambel '
+dic['push ups'] = 'pushaps'
+dic['pushups'] = 'pushaps'
+dic['seg '] = 'segundos '
+dic['seg.'] = 'segundos.'
+dic[' b:'] = '<break time=\"1s\"/>b: '
+dic[' c:'] = '<break time=\"1s\"/>c: '
+dic['d-ball'] = 'dibal'
+dic[' air '] = ' er '
+dic['situps']='sitaps'
+dic['dumbbell']='dambel'
+dic['dumbell']='dambel'
+dic['jump']='yamp'
+dic['candj']='clean and yerk'
+dic['hspu']='jand stan pushaps'
+dic['unders']='anders'
 
 /**
 Built in Handlers and variables. NOT TO TOUCH Excepto to add new handlers
