@@ -1,7 +1,7 @@
 {
     "interactionModel": {
         "languageModel": {
-            "invocationName": "entreno del dia",
+            "invocationName": "entreno del día",
             "intents": [
                 {
                     "name": "AMAZON.CancelIntent",
@@ -28,9 +28,8 @@
                     "slots": [],
                     "samples": [
                         "cual es el wod",
-                        "con que sufrimos hoy",
-                        "dime entreno del dia",
-                        "crossfit"
+                        "crossfit",
+                        "cual es el entreno de crossfit"
                     ]
                 },
                 {
@@ -46,8 +45,7 @@
                     "slots": [],
                     "samples": [
                         "football",
-                        "cual es el entreno de footbal",
-                        "cual es el entreno de los fuertes"
+                        "cual es el entreno de footbal"
                     ]
                 }
             ],

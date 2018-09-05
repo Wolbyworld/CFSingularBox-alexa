@@ -263,6 +263,12 @@ dic['jump']='yamp'
 dic['candj']='clean and yerk'
 dic['hspu']='jand stan pushaps'
 dic['unders']='anders'
+dic['ot2m']='cada dos minutos'
+dic[' min ']=' minutos '
+dic[' min.']=' minutos '
+dic['tandg']='tach and go'
+dic['rope climb']='rop claimb'
+dic[' m ']='minutos'
 
 /**
 Built in Handlers and variables. NOT TO TOUCH Excepto to add new handlers
