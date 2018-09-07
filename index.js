@@ -4,6 +4,8 @@
 //dependences
 const Alexa = require('ask-sdk');
 let Parser = require('rss-parser');
+const config = require('./configuration');
+
 
 //Variable definition
 const RSSFeed = "https://politepol.com/feed/24728";
@@ -47,8 +49,8 @@ const CrossfitHandler = {
   //If this handler handle it, then what to do
   async handle(handlerInput) {
   
+    console.log(config.s3BucketName);
     imageUrl = selectRandomeImage();
-    
     let parser = new Parser();
     let feed = await parser.parseURL(RSSFeed);
     string2read = myreadFeed(feed,CF)
@@ -252,6 +254,8 @@ dic['push ups'] = 'pushaps'
 dic['pushups'] = 'pushaps'
 dic['seg '] = 'segundos '
 dic['seg.'] = 'segundos.'
+dic['sec '] = 'segundos '
+dic['sec.'] = 'segundos.'
 dic[' b:'] = '<break time=\"1s\"/>b: '
 dic[' c:'] = '<break time=\"1s\"/>c: '
 dic['d-ball'] = 'dibal'
@@ -268,7 +272,11 @@ dic[' min ']=' minutos '
 dic[' min.']=' minutos '
 dic['tandg']='tach and go'
 dic['rope climb']='rop claimb'
-dic[' m ']='minutos'
+dic[' m ']='metros'
+dic['handstand']='jandstan'
+dic['\' ']=' minutos '
+dic['for time'] = 'por tiempo'
+
 
 /**
 Built in Handlers and variables. NOT TO TOUCH Excepto to add new handlers
